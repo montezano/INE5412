@@ -27,3 +27,11 @@
 *.exe
 *.out
 *.app
+/Debug
+/INE5412.vcxproj.filters
+/INE5412.vcxproj
+/INE5412.VC.VC.opendb
+/INE5412.VC.db
+/INE5412.sln
+/.vs/INE5412/v14
+/T1/t1
