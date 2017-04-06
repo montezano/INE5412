@@ -23,7 +23,7 @@ int load_grid(int grid[][SIZE], char *filename) {
 *	It looks for sudoku errors
 **/
 void verify(int grid[][SIZE]) {
-	int cont = 0, mult = 1;
+	int mult = 1;
 	int columns[SIZE] = {[0 ... (SIZE-1)] = 1}; // it works with gcc
 	int region[SIZE] = {[0 ... (SIZE-1)] = 1};
 
@@ -32,15 +32,13 @@ void verify(int grid[][SIZE]) {
 		columns[i%SIZE] *= result;
 		region[((i%SIZE)/3)+(((i/SIZE)/3)*3)] *= result; // Add it to a region
 
-		if(cont == SIZE){
+		mult *= result;
+
+		if((i+1)%SIZE == 0){
 			if( mult != MAX)
 				printf("erro na linha %d\n", (i-1)/SIZE);
-			cont = 0;
 			mult = 1;
 		}
-
-		mult *= result;
-		cont += 1;
 	}
 
 	for(int i = 0; i < SIZE; i++){
