@@ -24,26 +24,34 @@ int load_grid(int grid[][SIZE], char *filename) {
 **/
 void verify(int grid[][SIZE]) {
 	int mult = 1;
+	int mult_column = 1;
 	int columns[SIZE] = {[0 ... (SIZE-1)] = 1}; // it works with gcc
 	int region[SIZE] = {[0 ... (SIZE-1)] = 1};
 
 	for(int i = 0; i < 81; i++) {
-		int result = grid[i/SIZE][i%SIZE]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80]
-		columns[i%SIZE] *= result;
-		region[((i%SIZE)/3)+(((i/SIZE)/3)*3)] *= result; // Add it to a region
+		int result_line = grid[i/SIZE][i%SIZE]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80] //*(grid[0]+i)//
+		int result_column = grid[i%SIZE][i/SIZE];
 
-		mult *= result;
+		// columns[i%SIZE] *= result_line;
+		region[((i%SIZE)/3)+(((i/SIZE)/3)*3)] *= result_line; // Add it to a region
+
+		mult *= result_line;
+		mult_column *= result_column;
 
 		if((i+1)%SIZE == 0){
 			if( mult != MAX)
 				printf("erro na linha %d\n", (i-1)/SIZE);
+			if(mult_column != MAX)
+				printf("erro na coluna %d\n", (i-1)/SIZE);
 			mult = 1;
+			mult_column = 1;
+
 		}
 	}
 
 	for(int i = 0; i < SIZE; i++){
-		if(columns[i] != MAX)
-			printf("erro na coluna %d\n", i);
+		// if(columns[i] != MAX)
+		// 	printf("erro na coluna %d\n", i);
 		if(region[i] != MAX)
 			printf("erro na regiao %d\n", i);
 	}
