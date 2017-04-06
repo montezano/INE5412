@@ -2,6 +2,7 @@
 
 /* grid size = 9x9 */
 #define SIZE 9
+#define MAX 362880 // 9!
 
 /* Funcao que le um grid do arquivo "filename" e o armazena em uma matriz */
 int load_grid(int grid[][SIZE], char *filename) {
@@ -17,6 +18,40 @@ int load_grid(int grid[][SIZE], char *filename) {
 
 	return 0;
 }
+
+/**
+*	It looks for sudoku errors
+**/
+void verify(int grid[][SIZE]) {
+	int cont = 0, mult = 1;
+	int columns[SIZE] = {[0 ... (SIZE-1)] = 1}; // it works with gcc
+	int region[SIZE] = {[0 ... (SIZE-1)] = 1};
+
+	for(int i = 0; i < 81; i++) {
+		int result = grid[i/SIZE][i%SIZE]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80]
+		columns[i%SIZE] *= result;
+		region[((i%SIZE)/3)+(((i/SIZE)/3)*3)] *= result; // Add it to a region
+
+		if(cont == SIZE){
+			if( mult != MAX)
+				printf("erro na linha %d\n", (i-1)/SIZE);
+			cont = 0;
+			mult = 1;
+		}
+
+		mult *= result;
+		cont += 1;
+	}
+
+	for(int i = 0; i < SIZE; i++){
+		if(columns[i] != MAX)
+			printf("erro na coluna %d\n", i);
+		if(region[i] != MAX)
+			printf("erro na regiao %d\n", i);
+	}
+
+}
+
 
 int main(int argc, char *argv[]) {
 
@@ -35,6 +70,7 @@ int main(int argc, char *argv[]) {
 			printf("\n");
 		}
 		printf("\n");
+		verify(grid);
 	}
 
 	return 0;
