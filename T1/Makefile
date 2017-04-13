@@ -19,7 +19,7 @@ OBJS += $(SRCS:.cpp=.o)
 	@echo ' '
 
 all:	$(OBJS)
-	$(CC) $(CPPFLAGS) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJS) $(LIBS)
+	$(CC) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJS) $(LIBS) $(CPPFLAGS) 
 	@echo 'Build complete!'
 	@echo ' '
 
