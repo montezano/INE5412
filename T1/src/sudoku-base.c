@@ -28,7 +28,6 @@ int load_grid(char *filename) {
 
 void *calculate(void *t_number) {
 	int tn = *(int*)t_number;
-
 	int mult_line, mult_column, mult_region, initial_point;
 
 	for(int i = tn; i < 27; i = i+max_threads){
@@ -36,16 +35,18 @@ void *calculate(void *t_number) {
 		switch(i/9){
 		case 0:
 			mult_line = 1;
-
 			for(int j = 0; j < 9; j++)
 			{
 				mult_line *= grid[i][j]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80] //*(grid[0]+i)//
 
 				if(j == 8){
 					if( mult_line != MAX){
-						printf("erro na linha %d\n", i);
+						printf("Thread %d: erro na linha %d.\n", tn, i);
+						pthread_mutex_lock(&mutex_error);
+						errors += 1;
+						pthread_mutex_unlock(&mutex_error);
 					}
-				}	
+				}
 			}
 
 			break;
@@ -55,12 +56,16 @@ void *calculate(void *t_number) {
 			for(int j = 0; j < 9; j++){
 
 
-				mult_column *= grid[j][i-9]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80] //*(grid[0]+i)//		
+				mult_column *= grid[j][i-9]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80] //*(grid[0]+i)//
 
 				if(j == 8){
-					if( mult_column != MAX)
-						printf("erro na coluna %d\n", i-9);
-				}	
+					if( mult_column != MAX){
+						printf("Thread %d: erro na coluna %d.\n", tn, i-9);
+						pthread_mutex_lock(&mutex_error);
+						errors += 1;
+						pthread_mutex_unlock(&mutex_error);
+					}
+				}
 			}
 
 			break;
@@ -75,10 +80,14 @@ void *calculate(void *t_number) {
 				mult_region *= *(grid[0]+initial_point+2);
 				initial_point += 9;
 			}
-			if( mult_region != MAX)
-					printf("erro na regiao %d\n", i-18);
+			if( mult_region != MAX){
+				printf("Thread %d: erro na regiao %d.\n", tn, i-18);
+				pthread_mutex_lock(&mutex_error);
+				errors += 1;
+				pthread_mutex_unlock(&mutex_error);
+			}
 
-			break;	
+			break;
 		}
 	}
 }
@@ -104,6 +113,7 @@ int main(int argc, char *argv[]) {
 	thread_number = malloc(sizeof(int)*max_threads);
 	jobs = malloc(sizeof(int)*27);
 	pthread_mutex_init(&mutex_error, NULL); // It protects the errors variable
+	errors = 0;
 
 	for(int i = 0; i < max_threads; i++){
 		thread_number[i] = i;
