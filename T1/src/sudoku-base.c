@@ -41,7 +41,7 @@ void *calculate(void *t_number) {
 
 				if(j == 8){
 					if( mult_line != MAX){
-						printf("Thread %d: erro na linha %d.\n", tn, i);
+						printf("Thread %d: erro na linha %d.\n", tn+1, i+1);
 						pthread_mutex_lock(&mutex_error);
 						errors += 1;
 						pthread_mutex_unlock(&mutex_error);
@@ -60,7 +60,7 @@ void *calculate(void *t_number) {
 
 				if(j == 8){
 					if( mult_column != MAX){
-						printf("Thread %d: erro na coluna %d.\n", tn, i-9);
+						printf("Thread %d: erro na coluna %d.\n", tn+1, i-8);
 						pthread_mutex_lock(&mutex_error);
 						errors += 1;
 						pthread_mutex_unlock(&mutex_error);
@@ -81,7 +81,7 @@ void *calculate(void *t_number) {
 				initial_point += 9;
 			}
 			if( mult_region != MAX){
-				printf("Thread %d: erro na regiao %d.\n", tn, i-18);
+				printf("Thread %d: erro na regiao %d.\n", tn+1, i-17);
 				pthread_mutex_lock(&mutex_error);
 				errors += 1;
 				pthread_mutex_unlock(&mutex_error);
