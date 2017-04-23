@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
 
 /* grid size = 9x9 */
 #define SIZE 9
@@ -133,11 +132,7 @@ int main(int argc, char *argv[]) {
 			printf("\n");
 		}
 		printf("\n");
-		clock_t begin = clock();
 		start_threads(); // May the war begin
-		clock_t end = clock();
-		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		printf("Time: %f\n", time_spent);
 		printf("Erros encontrados: %d.\n", errors);
 	}
 
