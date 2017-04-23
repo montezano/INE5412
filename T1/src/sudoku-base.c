@@ -113,10 +113,6 @@ void initialize_variables(int m_threads){
 	for(int i = 0; i < max_threads; i++){
 		thread_number[i] = i;
 	}
-
-	/* Le o grid do arquivo, armazena na matriz grid e imprime */
-
-
 }
 
 void initialize_grid(int (*p_grid)[9]){
