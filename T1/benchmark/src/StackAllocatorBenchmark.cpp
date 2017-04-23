@@ -47,9 +47,9 @@ BENCHMARK_P_F(SudokuCheckerBenchmark, correct, 50, 1000, (int m_threads)) {
 // 	malloc(bytes);
 // }
 
-BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct,(27));
+BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct,(1));
 BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct,(3));
-BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct, (1));
+BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct, (27));
 BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, correct, (243));
 
 // BENCHMARK_P_INSTANCE(SudokuCheckerBenchmark, malloc, (16ul));
