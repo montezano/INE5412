@@ -6,15 +6,17 @@
 #define SIZE 9
 #define MAX 362880 // 9!
 
-int grid[9][9];
+int (*grid)[9];
 int max_threads;
+char *filename;
 int *thread_number;
-int *jobs;
 int errors;
 pthread_mutex_t mutex_error;
 
 /* Funcao que le um grid do arquivo "filename" e o armazena em uma matriz */
 int load_grid(char *filename) {
+	grid = (int (*)[9])malloc(sizeof(*grid)*9);
+
 	FILE *input_file = fopen(filename, "r");
 	if (input_file != NULL) {
 		for(int i = 0; i < SIZE; i++)
@@ -90,6 +92,7 @@ void *calculate(void *t_number) {
 			break;
 		}
 	}
+	return NULL;
 }
 
 static void start_threads(void){
@@ -102,6 +105,40 @@ static void start_threads(void){
 	}
 }
 
+void initialize_variables(int m_threads){
+	thread_number = (int*)malloc(m_threads*sizeof(int));
+
+	pthread_mutex_init(&mutex_error, NULL); // It protects the errors variable
+	errors = 0;
+
+	for(int i = 0; i < max_threads; i++){
+		thread_number[i] = i;
+	}
+
+	/* Le o grid do arquivo, armazena na matriz grid e imprime */
+
+
+}
+
+void initialize_grid(int (*p_grid)[9]){
+	grid = p_grid;
+}
+
+int initialize_grid_file(){
+	if(load_grid(filename)) {
+		printf("Quebra-cabecas fornecido:\n");
+		for(int i = 0; i < 9; i++) {
+			for(int j = 0; j < 9; j++)
+				printf("%d ", grid[i][j]);
+			printf("\n");
+		}
+		printf("\n");
+		return 1;
+	}
+	return 0;
+}
+
+#ifndef BENCH
 int main(int argc, char *argv[]) {
 
 	if(argc != 3) {
@@ -110,32 +147,25 @@ int main(int argc, char *argv[]) {
 	}
 
 	max_threads = atoi(argv[2]);
-	thread_number = malloc(sizeof(int)*max_threads);
-	jobs = malloc(sizeof(int)*27);
-	pthread_mutex_init(&mutex_error, NULL); // It protects the errors variable
-	errors = 0;
+	filename = argv[1];
 
-	for(int i = 0; i < max_threads; i++){
-		thread_number[i] = i;
-	}
+	initialize_variables(max_threads);
+	int grid_p[9][9] = {{3, 5, 4, 6, 7, 8, 9, 1, 2},
+						{6, 7, 2, 1, 9, 5, 3, 4, 8},
+						{1, 9, 8, 3, 4, 2, 5, 6, 7},
+						{8, 5, 9, 7, 6, 1, 4, 2, 7},
+						{4, 2, 6, 8, 5, 3, 7, 9, 1},
+						{7, 1, 3, 9, 2, 4, 8, 5, 6},
+						{9, 6, 1, 5, 3, 7, 2, 8, 4},
+						{2, 8, 7, 4, 1, 9, 6, 3, 5},
+						{3, 4, 5, 2, 8, 6, 1, 7, 9}};
+	initialize_grid(grid_p);
+	// initialize_grid_file();
 
-	for(int i = 0; i < 27; i++){
-		jobs[i] = i;
-	}
+	start_threads(); // May the war begin
+	printf("Erros encontrados: %d.\n", errors);
 
-	/* Le o grid do arquivo, armazena na matriz grid e imprime */
-
-	if(load_grid(argv[1])) {
-		printf("Quebra-cabecas fornecido:\n");
-		for(int i = 0; i < 9; i++) {
-			for(int j = 0; j < 9; j++)
-				printf("%d ", grid[i][j]);
-			printf("\n");
-		}
-		printf("\n");
-		start_threads(); // May the war begin
-		printf("Erros encontrados: %d.\n", errors);
-	}
 
 	return 0;
 }
+#endif //BENCH
