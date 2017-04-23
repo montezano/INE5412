@@ -57,7 +57,6 @@ void *calculate(void *t_number) {
 			mult_column = 1;
 			for(int j = 0; j < 9; j++){
 
-
 				mult_column *= grid[j][i-9]; // grid[x][y] x = position/9, y = position%9 ... position [0 .. 80] //*(grid[0]+i)//
 
 				if(j == 8){
